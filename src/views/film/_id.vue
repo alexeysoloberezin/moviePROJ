@@ -39,7 +39,9 @@
         </div>
         <Divider/>
         <div class="flex flex-wrap gap-2 my-3">
-          <!--          <Button severity="success" raised rounded outlined>View Trailer</Button>-->
+          <router-link :to="`/buyTicket/${film.kinopoiskId}/start`">
+            <Button severity="info" raised rounded outlined >Buy ticket</Button>
+          </router-link>
           <Button v-if="!videos" severity="success" outlined raised rounded @click="getTrailer(film.kinopoiskId)">View
             Trailer
           </Button>

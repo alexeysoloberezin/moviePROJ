@@ -6,8 +6,9 @@
     "composite": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@/types/film.types": [".src/types/films/film.types.ts"]
+      "@/*": ["src/*"],
+      "@types/*": ["src/types/*"],
+      "@store/*": ["src/store/films/*"]
     }
   }
 }

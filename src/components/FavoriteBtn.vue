@@ -1,5 +1,6 @@
 <template>
-  <Button v-if="isAuth" @click.stop.prevent="favoriteToggle" :loading="favoriteLoading" icon="pi pi-bookmark" size="small" :severity="!isFavoriteFun ? 'secondary' : 'info'" aria-label="Bookmark"/>
+  <Button v-if="isAuth" @click.stop.prevent="favoriteToggle" :loading="favoriteLoading" icon="pi pi-bookmark"
+          size="small" :severity="!isFavoriteFun ? 'secondary' : 'info'" aria-label="Bookmark"/>
 </template>
 
 <script setup>
@@ -25,12 +26,13 @@ watch(() => favorite.value, (newValue, oldValue) => {
 const favoriteToggle = async () => {
   const user = auth.currentUser;
   const userId = user.uid;
-  if(userId && props.id){
+  if (userId && props.id) {
     favoriteLoading.value = true
     try {
-      await addToFavorites(userId, {name: props.name,posterUrl: props.posterImg, id: props.id});
+      await addToFavorites(userId, {name: props.name, posterUrl: props.posterImg, id: props.id});
       await getFavorites(userId)
-    }catch (err){}
+    } catch (err) {
+    }
     favoriteLoading.value = false
   }
 }

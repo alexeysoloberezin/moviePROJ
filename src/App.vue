@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 import SidebarMain from '@/components/SidebarMain.vue';
 import {useRoute} from 'vue-router';
 import {computed} from '@vue/reactivity';
@@ -26,6 +26,7 @@ onBeforeMount(async () => {
     <RouterView/>
     <Toast/>
   </div>
+  <ScrollTop />
 </template>
 
 <style lang="scss">

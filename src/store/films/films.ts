@@ -4,23 +4,28 @@ import {computed, ref} from "vue";
 import type {Ref, ComputedRef} from "vue";
 import {videoImages} from "@/types/films/film.types";
 
-interface FilmStoreState {
-  films: Ref<FilmData[] | null>;
-  film: Ref<FilmDataZoom | null>;
-  awards: Ref<FilmAward[] | null>;
-  videos: Ref<any>;
-  videoImages: Ref<any>;
-  getOskarLength: ComputedRef<number | null>;
-  getVideoYoutube: ComputedRef<any>
-  loadFilms: () => Promise<void>
-  loadFilm: () => Promise<void>
-  loadAwards: () => Promise<void>
-  loadVideos: () => Promise<void>
-  clearFilmsAll: () => Promise<void>
+export enum SortOrder {
+  RATING = 'RATING',
+  NUM_VOTE = 'NUM_VOTE',
+  YEAR = 'YEAR',
+}
+export enum FilmType {
+  FILM = 'FILM',
+  TV_SHOW = 'TV_SHOW',
+  TV_SERIES = 'TV_SERIES',
+  MINI_SERIES = 'MINI_SERIES',
+  ALL = 'ALL'
 }
 
+export const allSortOrders = Object.entries(SortOrder).map(([key, name]) => ({ key, name }));;
+export const allFilmType = Object.entries(FilmType).map(([key, name]) => ({ key, name }));;
+
+
 export const useFilmsStore = defineStore('films', () => {
-  const films = ref<null | FilmData[]>(null);
+  const films = ref<[] | FilmData[]>([]);
+  const currentPage = ref<number>(0);
+  const totalPages = ref<any>(null);
+  const disableLoading = ref<boolean>(false)
   const film = ref<null | FilmDataZoom>(null);
   const awards = ref<null | FilmAward[]>(null);
   const videos = ref<any>(null)
@@ -40,6 +45,9 @@ export const useFilmsStore = defineStore('films', () => {
     return videos.value.filter((video) => video?.site === 'YOUTUBE')
   })
 
+  const isLastPage = computed(
+    () => totalPages.value && currentPage.value === totalPages.value)
+
   const getOskarLength = computed<number | null>(() => {
     if (Array.isArray(awards.value)) {
       const oskarArr = awards.value.filter(award => award.name === 'Оскар');
@@ -51,7 +59,9 @@ export const useFilmsStore = defineStore('films', () => {
   });
 
   function isFavorite(id: string | number): boolean {
-    return favorite.value.some((item) => item.id === String(id));
+    return favorite.value.some((item) => String(item.id) === String(id))
+      || favorite.value.some((item) => String(item.kinopoiskId) === String(id))
+      || favorite.value.some((item) => String(item.imdbId) === String(id))
   }
 
   function setFavorite(arr: string[]) {
@@ -172,27 +182,38 @@ export const useFilmsStore = defineStore('films', () => {
     }
   }
 
-  async function loadFilmsFiltered(params: FilmSearchParams): Promise<void> {
+  async function loadFilmsFiltered(params: FilmSearchParams, loadMore:boolean): Promise<void> {
+    console.log('loadFilmsFiltered')
     try {
-      const response = await makeRequest({url: `/films/`, method: 'get', params})
+      videoImageLoading.value = true
+      const response = await makeRequest({url: `/films`, method: 'get', params})
       if (response?.data) {
-        debugger
-        similars.value = response.data
+        totalPages.value = response.data.totalPages
+        if(loadMore){
+          films.value = films.value.concat(response.data.items)
+        }else{
+          films.value = response.data.items
+        }
+        disableLoading.value = false
       }
     } catch (error) {
       console.error('Error loading Similars:', error);
     }
+    videoImageLoading.value = false
   }
 
   function clearFilmsAll(): void {
-    films.value = null;
+    films.value = [];
     film.value = null;
     awards.value = null;
     videos.value = null;
     videoImages.value = null;
+    videoImageLoading.value = false;
     sequels.value = null;
     similars.value = null;
     filters.value = null;
+    totalPages.value = null
+    currentPage.value = 1
   }
 
   return <FilmStoreState>{
@@ -203,7 +224,12 @@ export const useFilmsStore = defineStore('films', () => {
     loadImages,
     loadSequels,
     loadFilters,
+    loadFilmsFiltered,
     filters,
+    currentPage,
+    isLastPage,
+    disableLoading,
+    totalPages,
     loadSimilars,
     setFavorite,
     videoImageLoading,
@@ -315,10 +341,6 @@ interface FilmAward {
   persons: Person[];
 }
 
-export type SortOrder = 'RATING' | 'NUM_VOTE' | 'YEAR';
-
-export type FilmType = 'FILM' | 'TV_SHOW' | 'TV_SERIES' | 'MINI_SERIES' | 'ALL';
-
 export interface FilmSearchParams {
   countries?: number[];  // Массив id стран разделенных запятой
   genres?: number[];     // Массив id жанров разделенных запятой
@@ -333,3 +355,17 @@ export interface FilmSearchParams {
   page?: number;         // Номер страницы
 }
 
+interface FilmStoreState {
+  films: Ref<FilmData[] | null>;
+  film: Ref<FilmDataZoom | null>;
+  awards: Ref<FilmAward[] | null>;
+  videos: Ref<any>;
+  videoImages: Ref<any>;
+  getOskarLength: ComputedRef<number | null>;
+  getVideoYoutube: ComputedRef<any>
+  loadFilms: () => Promise<void>
+  loadFilm: () => Promise<void>
+  loadAwards: () => Promise<void>
+  loadVideos: () => Promise<void>
+  clearFilmsAll: () => Promise<void>
+}

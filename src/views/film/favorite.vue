@@ -7,7 +7,7 @@
           <InputText v-model="search" placeholder="Search"/>
       </span>
     </div>
-    <FilmList :films="favoriteList"/>
+    <FilmList :films="favoriteList" :key="favoriteList.length"/>
   </div>
 </template>
 
@@ -17,6 +17,7 @@ import {computed, ref} from "vue";
 import FilmList from "@/components/ui/FilmList.vue";
 
 const filmStore = useFilmsStore()
+const favorite = computed(() => filmStore.favorite)
 const favoriteList = computed(
     () => filmStore.favorite.filter(item => item.name.toLowerCase().includes(search.value.toLowerCase())))
 const search = ref('')

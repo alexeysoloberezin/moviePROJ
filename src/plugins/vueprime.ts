@@ -19,6 +19,8 @@ import TabPanel from 'primevue/tabpanel';
 import ProgressBar from 'primevue/progressbar';
 import Menubar from 'primevue/menubar';
 import Dropdown from 'primevue/dropdown';
+import Slider from 'primevue/slider';
+import ScrollTop from 'primevue/scrolltop';
 
 export default function initPrime(app){
     app.use(PrimeVue, {});
@@ -39,5 +41,6 @@ export default function initPrime(app){
     app.component('ProgressBar', ProgressBar);
     app.component('Menubar', Menubar);
     app.component('Dropdown', Dropdown);
-
+    app.component('Slider', Slider);
+    app.component('ScrollTop', ScrollTop);
 }
