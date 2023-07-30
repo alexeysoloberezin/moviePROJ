@@ -3,16 +3,16 @@ import SidebarMain from '@/components/SidebarMain.vue';
 import {useRoute} from 'vue-router';
 import {computed} from '@vue/reactivity';
 import {onBeforeMount} from '@vue/runtime-core';
-// import {useAuthStore} from '@/store/auth';
+import {useAuthStore} from "@/store/auth";
 
 const emptyPage = ['/auth/login','/auth/register']
 const route = useRoute()
+const authStore = useAuthStore()
 
 const isEmptyPage = computed(() =>  emptyPage.includes(route.path))
 
 onBeforeMount(async () => {
-  // const authStore = useAuthStore()
-  // authStore.restoreTokens()
+  authStore.restoreTokens()
 });
 </script>
 

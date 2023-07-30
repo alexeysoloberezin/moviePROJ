@@ -77,3 +77,75 @@ img{
   width: 100%;
   height: 100%;
 }
+
+
+.slider {
+  &__poster {
+    img {
+      width: 100%;
+      height: 400px;
+      object-fit: cover;
+      border-radius: 8px;
+      transition: .5s;
+    }
+  }
+
+  &__info {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    border-radius: 8px;
+    height: 100%;
+    z-index: 2;
+    transition: transform .2s, opacity .4s, filter .4s;
+    opacity: 0;
+    filter: blur(25px);
+    transform-origin: bottom center;
+
+    &:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 102%;
+      z-index: 1;
+      background: rgba(0, 0, 0, 0.5);
+      height: 102%;
+      border-radius: 7px;
+      backdrop-filter: blur(15px);
+      left: 0;
+    }
+
+    & > div {
+      position: relative;
+      z-index: 5;
+      padding: 20px;
+    }
+  }
+
+  &__item {
+    margin: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    display: block;
+    border-radius: 8px;
+    position: relative;
+
+    &:hover {
+      .slider__poster {
+        overflow: hidden;
+
+        img {
+          filter: blur(10px);
+          transform: scale(1.1);
+        }
+      }
+
+      .slider__info {
+        opacity: 1;
+        filter: blur(0px);
+      }
+    }
+
+  }
+}

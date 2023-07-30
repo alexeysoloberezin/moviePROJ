@@ -55,7 +55,7 @@ async function signIn() {
     console.log('Logged in user:', user);
     if (user.accessToken) {
       const authStore = useAuthStore()
-      authStore.setTokens(user.accessToken, user.email, remember.value)
+      authStore.setTokens(user.accessToken, user.email, remember.value, user.uid)
       await router.push('/')
     } else {
       toast.error('Token is empty')

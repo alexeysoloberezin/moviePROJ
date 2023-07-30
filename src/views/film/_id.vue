@@ -8,7 +8,11 @@
         <div class="flex gap-2">
         </div>
         <div class="flex align-items-center gap-2">
-          <Button icon="pi pi-bookmark" size="small" severity="secondary" aria-label="Bookmark"/>
+          <favorite-btn
+            :name="film.nameRu || film.nameEn"
+            :poster-img="film.posterUrl || film.posterUrlPreview"
+            :id="id"
+          />
           <p>Year: {{ film.year }}</p>
         </div>
         <div class="flex align-items-center gap-2 mt-3">
@@ -34,7 +38,7 @@
             }}</span>
         </div>
         <Divider/>
-        <div class="flex gap-3 my-3">
+        <div class="flex flex-wrap gap-2 my-3">
           <!--          <Button severity="success" raised rounded outlined>View Trailer</Button>-->
           <Button v-if="!videos" severity="success" outlined raised rounded @click="getTrailer(film.kinopoiskId)">View
             Trailer
@@ -62,16 +66,19 @@
         </div>
       </div>
     </div>
-    <div class="my-5">
+
+    <div class="my-4">
       <TabView :scrollable="true" @tab-change="changeVideoImageTab">
         <TabPanel v-for="tab in scrollableTabs" :key="tab.title" :header="tab.title">
-          <div v-if="!videoImageLoading" >
-            <div v-if="Array.isArray(videosImages) && videosImages.length > 0" class="images flex flex-row flex-wrap align-items-start">
+          <div v-if="!videoImageLoading">
+            <div v-if="Array.isArray(videosImages) && videosImages.length > 0"
+                 class="images flex flex-row flex-wrap align-items-start">
               <Image v-for="vImage in videosImages" class="col-3"
                      alt="Image" imageStyle="width:100%;heigth:100%" preview
               >
                 <template #image>
-                  <img :src="vImage.previewUrl" alt="image" style="width: 100%;height: 100%;max-height: 400px;object-fit: cover"/>
+                  <img :src="vImage.previewUrl" alt="image"
+                       style="width: 100%;height: 100%;max-height: 400px;object-fit: cover"/>
                 </template>
                 <template #preview="slotProps">
                   <img :src="vImage.imageUrl" alt="preview" :style="slotProps.style"
@@ -90,44 +97,33 @@
         </TabPanel>
       </TabView>
     </div>
-    <!--    <Carousel v-if="films" class="slider" :value="films" :numVisible="6" :numScroll="1">-->
-    <!--      <template #item="{data}">-->
-    <!--        <router-link :to="'/film/' + data.filmId" class="slider__item">-->
-    <!--          <div class="slider__poster">-->
-    <!--            <img :src="data.posterUrlPreview" :alt="data.nameRu" class="shadow-2"/>-->
-    <!--          </div>-->
-    <!--          <div class="slider__info">-->
-    <!--            <div>-->
-    <!--              <h3>{{ data.rating }}</h3>-->
-    <!--              <h4 class="my-1">{{ data.nameRu }}</h4>-->
-    <!--              <h6>Длительность: {{ data.filmLength }}</h6>-->
-    <!--              <div class="flex flex-wrap gap-1 mt-2">-->
-    <!--                <Tag v-for="genre in data.genres" :value="genre.genre" severity="success"/>-->
-    <!--              </div>-->
-    <!--            </div>-->
-    <!--          </div>-->
-    <!--        </router-link>-->
-    <!--      </template>-->
-    <!--    </Carousel>-->
+
+    <div v-if="sequels">
+      <h2 class="mt-5">Sequels</h2>
+      <Swiper1 :films="sequels"/>
+    </div>
   </div>
 </template>
 
 <script setup>
 import {useFilmsStore} from '@/store/films/films';
 import {useRoute} from 'vue-router';
-import {computed, onBeforeMount, ref} from 'vue'
+import {computed, onBeforeMount, ref, watch} from 'vue'
 import {getEmbedUrlYoutube} from "@/utils/video";
 import {videoImages} from "@/types/films/film.types";
+import FavoriteBtn from "@/components/FavoriteBtn.vue";
+import Swiper1 from "@/components/ui/swipers/Swiper1.vue";
 
 const filmsStore = useFilmsStore();
 const route = useRoute()
 const id = route.params.id
 const film = computed(() => filmsStore.film);
+const sequels = computed(() => filmsStore.sequels);
 const videos = computed(() => filmsStore.getVideoYoutube);
 const videoImagesLength = computed(() => filmsStore.videoImagesLength)
 const videosImages = computed(() => {
-  if(videosImagesShowMore.value) return filmsStore.videoImages
-  return filmsStore.videoImages.slice(0,8)
+  if (videosImagesShowMore.value) return filmsStore.videoImages
+  return filmsStore.videoImages ? filmsStore.videoImages.slice(0, 8) : null
 });
 const videoImageLoading = computed(() => filmsStore.videoImageLoading);
 const videosImagesShowMore = ref(false)
@@ -142,6 +138,7 @@ onBeforeMount(() => {
   filmsStore.clearFilmsAll()
   if (id) {
     filmsStore.loadFilm(id);
+    filmsStore.loadSequels(id)
     filmsStore.loadImages(id, tabsVideoImages[0])
   }
 })
@@ -151,7 +148,6 @@ const getTrailer = (id) => {
 }
 
 const openTrailer = (url) => {
-  console.log(url)
   showTrailer.value = true
   urlTrailer.value = getEmbedUrlYoutube(url)
 }
@@ -159,6 +155,7 @@ const openTrailer = (url) => {
 const changeVideoImageTab = ({index}) => {
   filmsStore.loadImages(id, tabsVideoImages[index])
 }
+
 </script>
 
 <style lang="scss">
@@ -166,14 +163,6 @@ const changeVideoImageTab = ({index}) => {
   display: grid;
   grid-template-columns: 400px 1fr;
   grid-gap: 30px;
-
-  &__l {
-
-  }
-
-  &__r {
-
-  }
 
   &__img {
     width: 100%;

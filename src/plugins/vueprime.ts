@@ -17,6 +17,8 @@ import Dialog from 'primevue/dialog';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
 import ProgressBar from 'primevue/progressbar';
+import Menubar from 'primevue/menubar';
+import Dropdown from 'primevue/dropdown';
 
 export default function initPrime(app){
     app.use(PrimeVue, {});
@@ -35,5 +37,7 @@ export default function initPrime(app){
     app.component('TabView', TabView);
     app.component('TabPanel', TabPanel);
     app.component('ProgressBar', ProgressBar);
+    app.component('Menubar', Menubar);
+    app.component('Dropdown', Dropdown);
 
 }

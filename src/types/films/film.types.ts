@@ -9,3 +9,4 @@ export enum videoImages {
   COVER = 'COVER',
   SCREENSHOT = 'SCREENSHOT'
 }
+

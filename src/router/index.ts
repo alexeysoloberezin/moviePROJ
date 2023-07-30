@@ -4,6 +4,8 @@ import register from '@/views/auth/register.vue'
 import logout from '@/views/auth/logout.vue'
 import Home from '@/views/index.vue'
 import filmZoom from '@/views/film/_id.vue'
+import favorite from '@/views/film/favorite.vue'
+import allFilms from '@/views/film/allFilms.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -32,6 +34,16 @@ const router = createRouter({
       path: '/film/:id',
       name: 'filmZoom',
       component: filmZoom
+    },
+    {
+      path: '/favorite',
+      name: 'favoriteFilms',
+      component: favorite
+    },
+    {
+      path: '/allFilms',
+      name: 'allFilms',
+      component: allFilms
     },
   ]
 })
