@@ -10,7 +10,6 @@ export async function addToFavorites(userId, movie) {
     if (!favoritesSnapshot.exists()) {
       // Если у пользователя еще нет списка избранного, создаем его и добавляем фильм
       await setDoc(favoritesRef, { movies: [movie] });
-      console.log('Фильм добавлен в список избранного!');
     } else {
       // Если у пользователя уже есть список избранного
       const currentFavorites = favoritesSnapshot.data().movies || [];
@@ -21,12 +20,10 @@ export async function addToFavorites(userId, movie) {
         // Фильм уже есть в списке, удаляем его
         currentFavorites.splice(movieIndex, 1);
         await updateDoc(favoritesRef, { movies: currentFavorites });
-        console.log('Фильм удален из списка избранного!');
       } else {
         // Фильма нет в списке, добавляем его
         currentFavorites.push(movie);
         await updateDoc(favoritesRef, { movies: currentFavorites });
-        console.log('Фильм добавлен в список избранного!');
       }
     }
 
@@ -54,7 +51,6 @@ export async function getAllFavorites() {
 
     // Преобразуем снимок документов в массив объектов данных
     const favorites = favoritesSnapshot.docs.map((doc) => doc.data());
-    console.log('favorites', favorites)
 
     return favorites;
   } catch (error) {
@@ -64,7 +60,6 @@ export async function getAllFavorites() {
 }
 
 export async function getFavorites(userId) {
-  console.log('getFAV', userId)
   const filmStore = useFilmsStore()
 
   try {
@@ -73,11 +68,9 @@ export async function getFavorites(userId) {
 
     if (favoritesSnapshot.exists()) {
       const favorites = favoritesSnapshot.data().movies || [];
-      console.log('favorites', favorites)
       filmStore.setFavorite(favorites)
       return favorites;
     } else {
-      console.log('У пользователя еще нет списка избранного.');
       filmStore.setFavorite(favorites)
       return [];
     }
