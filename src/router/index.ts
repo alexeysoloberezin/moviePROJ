@@ -7,6 +7,8 @@ import filmZoom from '@/views/film/_id.vue'
 import favorite from '@/views/film/favorite.vue'
 import allFilms from '@/views/film/allFilms.vue'
 import BuyTicketStart from '@/views/buyTicket/start.vue'
+import BuyTicketTime from '@/views/buyTicket/time.vue'
+import BuyTicketForm from '@/views/buyTicket/form.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -50,6 +52,16 @@ const router = createRouter({
       path: '/buyTicket/:id/start',
       name: 'buyTicketStart',
       component: BuyTicketStart
+    },
+    {
+      path: '/buyTicket/:id/time',
+      name: 'buyTicketTime',
+      component: BuyTicketTime
+    },
+    {
+      path: '/buyTicket/:id/form',
+      name: 'buyTicketForm',
+      component: BuyTicketForm
     },
   ]
 })

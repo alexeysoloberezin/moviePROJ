@@ -21,6 +21,7 @@ import Menubar from 'primevue/menubar';
 import Dropdown from 'primevue/dropdown';
 import Slider from 'primevue/slider';
 import ScrollTop from 'primevue/scrolltop';
+import Steps from 'primevue/steps';
 
 export default function initPrime(app){
     app.use(PrimeVue, {});
@@ -43,4 +44,6 @@ export default function initPrime(app){
     app.component('Dropdown', Dropdown);
     app.component('Slider', Slider);
     app.component('ScrollTop', ScrollTop);
+    app.component('Steps', Steps);
+
 }
