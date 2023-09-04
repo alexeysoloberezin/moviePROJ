@@ -1,23 +1,12 @@
 <template>
   <div>
-    <stripe-checkout
-        ref="checkoutRef"
-        mode="payment"
-        :pk="publishableKey"
-        :line-items="lineItems"
-        :success-url="successURL"
-        :cancel-url="cancelURL"
-        @loading="v => loading = v"
-    />
     <button @click="submit">Pay now!</button>
   </div>
 </template>
 
-<script>
-import { StripeCheckout } from '@vue-stripe/vue-stripe';
+<script lang="ts">
 export default {
   components: {
-    StripeCheckout,
   },
   data () {
     return {
@@ -35,8 +24,6 @@ export default {
   },
   methods: {
     submit () {
-      // You will be redirected to Stripe's secure checkout page
-      this.$refs.checkoutRef.redirectToCheckout();
     },
   },
 };
