@@ -2,7 +2,7 @@
   <Main>
     <template #default>
       <h3 class="mt-5">Choose time</h3>
-      <choose-place @selected-items="selectedItems"/>
+      <choose-place/>
 
       <div v-if="totalPrice" class="flex gap-3 align-items-center">
         <Button size="small">{{ ticketList.length > 1 ? 'Buy tickets' : 'Buy ticket' }}</Button>
@@ -15,7 +15,7 @@
           <div v-if="idx !== 0" style="margin-right: -15px" class="pl-2">+</div>
         </li>
       </ul>
-
+      <StripeCheckout />
     </template>
   </Main>
 </template>
@@ -27,6 +27,7 @@ import {getBackStep, getNextStep, getSteps, useBuyTicketStore} from "@/store/buy
 import {useRoute, useRouter} from "vue-router";
 import {getTimeByDate} from "@/fakeData/butTicket";
 import ChoosePlace from "@/components/ui/choosePlace.vue";
+import StripeCheckout from "@/components/stripeCheckout.vue";
 
 const router = useRouter()
 const route = useRoute()
@@ -35,16 +36,18 @@ const time = ref(null)
 const totalPrice = ref(0)
 const ticketPrice = computed(() => buyTicketStore.timeObj.price)
 
-const ticketList = ref([])
-
-const selectedItems = (items) => {
-  ticketList.value = items
+const ticketList = computed(() => {
   if(ticketPrice){
     const cleanedPriceString = ticketPrice.value.replace(/\$|\s/g, '');
     const price = parseFloat(cleanedPriceString);
-    totalPrice.value = price * items.length
+    totalPrice.value = price * buyTicketStore.seatList.length
   }
-}
+  return buyTicketStore.seatList
+})
+
+const selectedItems = computed(() => {
+
+})
 
 onBeforeMount(() => {
   if(!buyTicketStore.timeObj){

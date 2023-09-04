@@ -7,8 +7,9 @@ import {useRoute, useRouter} from "vue-router";
 export const useBuyTicketStore = defineStore('BuyTicket', () => {
   const date = ref('')
   const timeObj = ref(null)
+  const seatList = ref([])
 
-  return { date, timeObj }
+  return { date, timeObj, seatList }
 })
 
 export const getSteps = (id) => {

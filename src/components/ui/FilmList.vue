@@ -42,7 +42,7 @@ const getFilms = computed(() => {
     return {
       id: film?.id || film?.kinopoiskId || film?.imdbId,
       name: film?.name || film?.nameRu || film?.nameEn || film?.nameOriginal,
-      posterUrl: film?.posterUrl || film?.posterUrlPreview,
+      posterUrl: film?.posterUrlPreview || film?.posterUrl,
       ...film
     }
   })

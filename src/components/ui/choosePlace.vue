@@ -21,12 +21,14 @@
 
 <script setup>
 import {ref} from 'vue'
+import {useBuyTicketStore} from "@/store/buyTicket";
 
 const rows = ref([]);
 const selectItems = ref([])
 
 const isActive = (item) => selectItems.value.includes(item)
 const emit = defineEmits();
+const buyTicketStore = useBuyTicketStore()
 
 const selectItemsToggle = (item) => {
   if (selectItems.value.includes(item)) {
@@ -37,25 +39,25 @@ const selectItemsToggle = (item) => {
     // Иначе, добавляем элемент в массив selectItems
     selectItems.value.push(item);
   }
-  emit('selected-items', selectItems.value);
+  buyTicketStore.$patch({seatList: selectItems.value})
 }
 
 const clear = () => {
   selectItems.value = []
-  emit('selected-items', selectItems.value);
+  buyTicketStore.$patch({seatList: selectItems.value})
 }
 
-function generateSeats(count) {
+function generateSeats(count, row) {
   const seats = [];
   for (let i = 1; i <= count; i++) {
-    seats.push({ id: i, label: `S${i}` });
+    seats.push({ id: i, label: `${String.fromCharCode(64 + row)}${i}` });
   }
   return seats;
 }
 
 // Генерируем ряды с заданным количеством сидений
 for (let i = 1; i <= 10; i++) {
-  rows.value.push({ id: i, seats: generateSeats(16) });
+  rows.value.push({ id: i, seats: generateSeats(16, i) });
 }
 </script>
 

@@ -24,15 +24,19 @@ import {useRoute} from "vue-router";
 import {useFilmsStore} from "@/store/films/films";
 import Calendar from 'primevue/calendar';
 import BuyTicketSteps from "@/components/buyTicketSteps.vue";
+import {useBuyTicketStore} from "@/store/buyTicket";
 
 const route = useRoute()
 const id = route.params.id
 const filmsStore = useFilmsStore()
 const film = computed(() => filmsStore.film);
 const date = ref(null)
+const buyTicketStore = useBuyTicketStore()
 
 onBeforeMount(() => {
   filmsStore.clearFilmsAll()
+  // buyTicketStore.$patch({date: '', timeObj: null})
+
   if (id) {
     filmsStore.loadFilm(id);
   }
