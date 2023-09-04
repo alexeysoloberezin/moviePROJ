@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import SidebarMain from '@/components/SidebarMain.vue';
 import {useRoute} from 'vue-router';
 import {computed} from '@vue/reactivity';
